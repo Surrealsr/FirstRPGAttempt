@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public InputActionReference playerCamera;// Camera Look input
     public CharacterController playerControl; //Replacement for rigidbody on moving player
     public float playerSpeed = 5f;
-    public Transform cameraTransform;
+    Transform cameraTransform;
 
     private void OnEnable()
     {
@@ -18,6 +18,12 @@ public class PlayerMovement : MonoBehaviour
     {
         movePlayer.action.Disable();
         playerCamera.action.Disable();
+    }
+    void Start()
+    {
+        //solves problem of cameratransform dissapearing when you delete the object and replace with prefab
+        //Basically makes cameraTransform equal to the tranform of the object with "MainCamera" Tag 
+        cameraTransform = Camera.main.transform;
     }
 
     public void Update()

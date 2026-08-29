@@ -378,7 +378,7 @@ Transform:
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15212339, y: -7.4146214e-17, z: 1.1412194e-17, w: 0.98836154}
-  m_LocalPosition: {x: -22.496227, y: 3.539369, z: -19.734646}
+  m_LocalPosition: {x: -24.161179, y: 3.5393689, z: -19.18809}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -416,7 +416,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!1001 &3796122131991102204
+--- !u!1001 &1806978046
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -426,19 +426,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 872939918219265659, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
       propertyPath: m_Name
-      value: Player w/ Cam
+      value: Player w_ Cam
       objectReference: {fileID: 0}
     - target: {fileID: 1593083340979872376, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.642986
+      value: -24.307938
       objectReference: {fileID: 0}
     - target: {fileID: 1593083340979872376, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000000420373
+      value: -0.00000029281136
       objectReference: {fileID: 0}
     - target: {fileID: 1593083340979872376, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.867372
+      value: -10.320814
       objectReference: {fileID: 0}
     - target: {fileID: 1593083340979872376, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
       propertyPath: m_LocalRotation.w
@@ -479,4 +479,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 961739753}
   - {fileID: 203844589}
-  - {fileID: 3796122131991102204}
+  - {fileID: 1806978046}
