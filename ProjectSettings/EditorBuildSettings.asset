@@ -8,5 +8,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/StevensOpenWorld.unity
     guid: 01369ac3f708b1b4ba39a54bf96ec1e1
+  - enabled: 1
+    path: Assets/Scenes/MainGame.unity
+    guid: 2cea7873bdd91dc4685a83a12adcc654
+  - enabled: 1
+    path: Assets/Scenes/MichaelsOpenWorld.unity
+    guid: 4902140963c00834ab932707ef53f707
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
