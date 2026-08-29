@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public InputActionReference playerCamera;// Camera Look input
     public CharacterController playerControl; //Replacement for rigidbody on moving player
     public float playerSpeed = 5f;
-    Transform cameraTransform;
+    public Transform cameraTransform;
 
     private void OnEnable()
     {
