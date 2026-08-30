@@ -16,7 +16,19 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>(); //gets the nav mesh agent from the enemies compnents could just drag and drop it but this also works 
         GoToNextPatrolPoint();// begins the patrol sequence
     }
-    
+    public void Patrol()//what the enemy does when not chasing player 
+    {
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)// if the ai is not currently pathing to a player and has reached his destination(patrol point) do the following
+        {
+            waitimer += Time.deltaTime;// so this starts the timer that counts up 
+
+            if (waitimer >= waitTime) // if the wait time has reached 2 seconds do the following 
+            {
+                GoToNextPatrolPoint();
+                waitimer = 0;// we reset the timer for the next patrol point 
+            }
+        }
+    }
     public void Update()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);//calculates distance from enemy to player in a vector 3 then it puts it into the float variable "distanceToPlayer"
@@ -34,19 +46,7 @@ public class Enemy : MonoBehaviour
             agent.SetDestination(playerTransform.position);// just says to set the position of the ai to the player
             waitimer = 0;// we set the wait timer to this because lets say the enemy was at like 1.8 seconds into his wait timer when he started the chase, after the chase if we dont reset the timer he will only wait at his patrol point for 0.2 seconds thats why we set it to 0 at start of chase 
         }
-        void Patrol()//what the enemy does when not chasing player 
-        {
-            if(!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)// if the ai is not currently pathing to a player and has reached his destination(patrol point) do the following
-            {
-                waitimer += Time.deltaTime;// so this starts the timer that counts up 
-                
-                if(waitimer >= waitTime) // if the wait time has reached 2 seconds do the following 
-                {
-                    GoToNextPatrolPoint();
-                    waitimer = 0;// we reset the timer for the next patrol point 
-                }
-            }
-        }
+      
     }
     void GoToNextPatrolPoint()
     {
