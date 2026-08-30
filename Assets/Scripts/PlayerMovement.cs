@@ -62,9 +62,18 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 playerDirection = cameraForward * z + cameraRight * x;//playerDirection equals to the coords of where camera is facing and to the right of camera multiplied by x & z.
 
-
+        if (!playerControl.isGrounded && playerSprint.action.IsPressed())
+        {
+            playerStats.drainStamina();
+        }
         if (playerControl.isGrounded)
         {
+            if (!playerSprint.action.IsPressed())// if the sprint action is not being pressed and player is on the ground the player regens stamina
+            {
+                playerStats.regenStamina();
+            }
+
+
             if (playerSprint.action.IsPressed())//Checks if Sprint is pressed then it'll check if Stamina is more than 0, then it'll Sprint and drain stamina, otherwise it starts regen
             {
                 if (playerStats.currentStamina > 0)
@@ -76,10 +85,14 @@ public class PlayerMovement : MonoBehaviour
 
             airSpeed = currentPlayerSpeed;//calculates airSpeed to match current player speed
         }
-        else
+        else 
         {
-            playerStats.regenStamina();//then when player is not grounded, stamina will regen and current player speed will match what airspeed's value was while player was on the ground(sprinting speed)
+            //playerStats.regenStamina();//then when player is not grounded, stamina will regen and current player speed will match what airspeed's value was while player was on the ground(sprinting speed)
             currentPlayerSpeed = airSpeed;
+            if (currentPlayerSpeed > playerSpeed)
+            {
+                playerStats.drainStamina();
+            }
         }
 
         playerControl.Move(playerDirection * currentPlayerSpeed * Time.deltaTime);//The player controller for the player is the value of playerDirection multiplied by the float of playerSpeed multiplied by the realtime of the program so it moves at normal rate without being tied to FPS.
