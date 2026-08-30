@@ -8,12 +8,16 @@ public class PlayerMovement : MonoBehaviour
     public InputActionReference playerJump; // Player Jump input
     public InputActionReference playerCamera;// Camera Look input
     public CharacterController playerControl; //Replacement for rigidbody on moving player, solves problem of movement issues with objects
-        
+    public PlayerStats playerStats;
+    
     public float playerSpeed = 8f;
     public float playerGravity = -9.5f;
     public float playerJumpStrength = 7f;
     public float playerSprintSpeed = 10f;
+
     float fallSpeed;
+    float airSpeed;
+
     Transform cameraTransform;
    
 
@@ -39,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Update()
     {
+       
         float currentPlayerSpeed = playerSpeed;//default speed is walking speed
 
         Vector2 moveInput = movePlayer.action.ReadValue<Vector2>();//saves the info of how the player is moving into moveInput
@@ -57,10 +62,24 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 playerDirection = cameraForward * z + cameraRight * x;//playerDirection equals to the coords of where camera is facing and to the right of camera multiplied by x & z.
 
-        if (playerSprint.action.IsPressed())
+
+        if (playerControl.isGrounded)
         {
-            currentPlayerSpeed = playerSprintSpeed;// this will make default speed turn into sprinting speed
-            Debug.Log(playerSprint);
+            if (playerSprint.action.IsPressed())//Checks if Sprint is pressed then it'll check if Stamina is more than 0, then it'll Sprint and drain stamina, otherwise it starts regen
+            {
+                if (playerStats.currentStamina > 0)
+                {
+                    currentPlayerSpeed = playerSprintSpeed;// this will make default speed turn into sprinting speed
+                    playerStats.drainStamina();
+                }
+            }
+
+            airSpeed = currentPlayerSpeed;//calculates airSpeed to match current player speed
+        }
+        else
+        {
+            playerStats.regenStamina();//then when player is not grounded, stamina will regen and current player speed will match what airspeed's value was while player was on the ground(sprinting speed)
+            currentPlayerSpeed = airSpeed;
         }
 
         playerControl.Move(playerDirection * currentPlayerSpeed * Time.deltaTime);//The player controller for the player is the value of playerDirection multiplied by the float of playerSpeed multiplied by the realtime of the program so it moves at normal rate without being tied to FPS.
