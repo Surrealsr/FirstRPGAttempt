@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour// refrence the enemy health script for explanation on this one thier identical
 {
     public int playerMaxHealth = 100;
     [SerializeField] private int currentPlayerHealth;
