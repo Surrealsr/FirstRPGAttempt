@@ -4,12 +4,15 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public InputActionReference movePlayer; // Player Move input
+    public InputActionReference playerSprint; //Player Sprint input
     public InputActionReference playerJump; // Player Jump input
     public InputActionReference playerCamera;// Camera Look input
     public CharacterController playerControl; //Replacement for rigidbody on moving player, solves problem of movement issues with objects
         
-    public float playerSpeed = 5f;
-    public float playerGravity = -9f;
+    public float playerSpeed = 8f;
+    public float playerGravity = -9.5f;
+    public float playerJumpStrength = 7f;
+    public float playerSprintSpeed = 10f;
     float fallSpeed;
     Transform cameraTransform;
    
@@ -19,12 +22,14 @@ public class PlayerMovement : MonoBehaviour
         movePlayer.action.Enable();
         playerCamera.action.Enable();
         playerJump.action.Enable();
+        playerSprint.action.Enable();
     }
     private void OnDisable()
     {
         movePlayer.action.Disable();
         playerCamera.action.Disable();
         playerJump.action.Disable();
+        playerSprint.action.Disable();
     }
     void Start()
     {
@@ -33,7 +38,9 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void Update()
-    {   
+    {
+        float currentPlayerSpeed = playerSpeed;//default speed is walking speed
+
         Vector2 moveInput = movePlayer.action.ReadValue<Vector2>();//saves the info of how the player is moving into moveInput
         float x = moveInput.x;
         float z = moveInput.y; //so that player doesnt go flying when you press W
@@ -50,8 +57,13 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 playerDirection = cameraForward * z + cameraRight * x;//playerDirection equals to the coords of where camera is facing and to the right of camera multiplied by x & z.
 
+        if (playerSprint.action.IsPressed())
+        {
+            currentPlayerSpeed = playerSprintSpeed;// this will make default speed turn into sprinting speed
+            Debug.Log(playerSprint);
+        }
 
-        playerControl.Move(playerDirection * playerSpeed * Time.deltaTime);//The player controller for the player is the value of playerDirection multiplied by the float of playerSpeed multiplied by the realtime of the program so it moves at normal rate without being tied to FPS.
+        playerControl.Move(playerDirection * currentPlayerSpeed * Time.deltaTime);//The player controller for the player is the value of playerDirection multiplied by the float of playerSpeed multiplied by the realtime of the program so it moves at normal rate without being tied to FPS.
 
         rotatePlayer(cameraForward);
 
@@ -63,8 +75,12 @@ public class PlayerMovement : MonoBehaviour
         fallSpeed += playerGravity * Time.deltaTime;
         playerControl.Move(Vector3.up * fallSpeed * Time.deltaTime); //calculates the way the player falls(gravity)
 
+        if (playerJump.action.WasPressedThisFrame() && playerControl.isGrounded) //if Space was pressed and player is touching the ground then the gravity will turn into upwards force(a jump). 
+        {
+            fallSpeed = playerJumpStrength;
+        }
 
-
+        
     }
     
 
