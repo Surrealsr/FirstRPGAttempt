@@ -11,6 +11,7 @@ public class PlayerStats : MonoBehaviour
     public float currentStamina;
     public float staminaDrain = 20f;
     public float staminaRegen = 15f;
+    public int jumpDrain = 15;
 
      HealthBar healthBar;
      StaminaBar staminaBar;
@@ -52,6 +53,12 @@ public class PlayerStats : MonoBehaviour
             currentStamina += staminaRegen * Time.deltaTime;
             staminaBar.setStamina(currentStamina);
         }
+
+    }
+    public void staminaJumpDrain()//separate drain for jump
+    {
+        currentStamina -= jumpDrain;
+        staminaBar.setStamina(currentStamina);
     }
 
 }

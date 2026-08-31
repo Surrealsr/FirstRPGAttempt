@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public float playerJumpStrength = 7f;
     public float playerSprintSpeed = 10f;
 
+
     float fallSpeed;
     float airSpeed;
 
@@ -62,17 +63,14 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 playerDirection = cameraForward * z + cameraRight * x;//playerDirection equals to the coords of where camera is facing and to the right of camera multiplied by x & z.
 
-        if (!playerControl.isGrounded && playerSprint.action.IsPressed())
-        {
-            playerStats.drainStamina();
-        }
         if (playerControl.isGrounded)
         {
-            if (!playerSprint.action.IsPressed())// if the sprint action is not being pressed and player is on the ground the player regens stamina
+            if (playerJump.action.WasPressedThisFrame())
             {
-                playerStats.regenStamina();
+               fallSpeed = playerJumpStrength;
+               playerStats.staminaJumpDrain();
             }
-
+                
 
             if (playerSprint.action.IsPressed())//Checks if Sprint is pressed then it'll check if Stamina is more than 0, then it'll Sprint and drain stamina, otherwise it starts regen
             {
@@ -81,18 +79,16 @@ public class PlayerMovement : MonoBehaviour
                     currentPlayerSpeed = playerSprintSpeed;// this will make default speed turn into sprinting speed
                     playerStats.drainStamina();
                 }
+                            }
+            else
+            {
+                playerStats.regenStamina();
             }
-
             airSpeed = currentPlayerSpeed;//calculates airSpeed to match current player speed
         }
-        else 
+        else
         {
-            //playerStats.regenStamina();//then when player is not grounded, stamina will regen and current player speed will match what airspeed's value was while player was on the ground(sprinting speed)
             currentPlayerSpeed = airSpeed;
-            if (currentPlayerSpeed > playerSpeed)
-            {
-                playerStats.drainStamina();
-            }
         }
 
         playerControl.Move(playerDirection * currentPlayerSpeed * Time.deltaTime);//The player controller for the player is the value of playerDirection multiplied by the float of playerSpeed multiplied by the realtime of the program so it moves at normal rate without being tied to FPS.
@@ -107,12 +103,7 @@ public class PlayerMovement : MonoBehaviour
         fallSpeed += playerGravity * Time.deltaTime;
         playerControl.Move(Vector3.up * fallSpeed * Time.deltaTime); //calculates the way the player falls(gravity)
 
-        if (playerJump.action.WasPressedThisFrame() && playerControl.isGrounded) //if Space was pressed and player is touching the ground then the gravity will turn into upwards force(a jump). 
-        {
-            fallSpeed = playerJumpStrength;
-        }
-
-        
+       
     }
     
 
