@@ -55,7 +55,7 @@ public class PlayerStats : MonoBehaviour
         }
 
     }
-    public void staminaJumpDrain()//separate drain for jump
+    public void staminaJumpDrain()//separate drain for jump, no delta time so its just instant and not gradual
     {
         currentStamina -= jumpDrain;
         staminaBar.setStamina(currentStamina);

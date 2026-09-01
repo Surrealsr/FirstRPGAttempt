@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (playerControl.isGrounded)
         {
-            if (playerJump.action.WasPressedThisFrame())
+            if (playerJump.action.WasPressedThisFrame())//Checks if jump is pressed then downwards gravity(fallspeed) will turn into upwards force for a jump
             {
                fallSpeed = playerJumpStrength;
                playerStats.staminaJumpDrain();
