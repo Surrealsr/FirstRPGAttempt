@@ -1,35 +1,33 @@
-using System.Xml.Serialization;
 using UnityEngine;
 
 public class EnemyProjectile : MonoBehaviour
 {
-    public float speed = 15f;
-    public float lifeTime = 5f;
-    public int damage = 10;
-    PlayerHealth playerhealth; 
+    public float speed = 15f;// speed of projectile
+    public float lifeTime = 5f;//how long the projectile is in the scene before deleting itself
+    public int damage = 10; //how much dmg it does 
+    PlayerHealth playerhealth; //ref to player script to do the damage
 
     private void Start()
     {
-        Destroy(gameObject, lifeTime);
+        Destroy(gameObject, lifeTime);// deletes the proj in 5 seconds according to our float
     }
 
     private void Update()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+        transform.position += transform.forward * speed * Time.deltaTime;// what actually makes the projectile travel first is direction which is just forward from spawn the its the speed at which it travels then finally this makes it so diffrent framerates dont make it a diffrent speed.
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Projectile hit: " + other.gameObject.name);
 
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player"))// true if hits player
         {
-            Debug.Log("Player got Hit!" + damage);
-            Destroy(gameObject);
-            playerhealth.TakeDamage(damage);
+            Debug.Log("Player got Hit!" + damage);//simple log 
+            playerhealth.TakeDamage(damage);// deals damage to the player
+            Destroy(gameObject);//deletes itself
         }
-        else
+        else//if misses 
         {
-            Destroy(gameObject);
+            Destroy(gameObject);//deletes itself
         } 
 
     }
