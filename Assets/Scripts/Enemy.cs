@@ -33,10 +33,11 @@ public class Enemy : MonoBehaviour
     }
     public void Update()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);//calculates distance from enemy to player in a vector 3 then it puts it into the float variable "distanceToPlayer"
+        
 
         if (inChase) //if player is currently in a chase do the following
         {
+            
             ChasePlayer();
         }
 
@@ -56,7 +57,16 @@ public class Enemy : MonoBehaviour
                 {
                     inChase = true;// sets chase to true
                 }
+                else if (!inChase)
+                {
+                    Patrol();
+                }
             }
+            else if (!inChase)
+            {
+                Patrol();
+            }
+
         }
         else //if player is not in detection range
         {
@@ -65,8 +75,9 @@ public class Enemy : MonoBehaviour
         }
         void ChasePlayer()// makes a func named ChasePlayer that only runs when that previous "if" statement is met.
         {
-            LookAtPlayer();
+            Debug.Log("CHASE PLAYER RUNNING");
             agent.SetDestination(playerTransform.position);// just says to set the position of the ai to the player
+            LookAtPlayer();
             waitimer = 0;// we set the wait timer to this because lets say the enemy was at like 1.8 seconds into his wait timer when he started the chase, after the chase if we dont reset the timer he will only wait at his patrol point for 0.2 seconds thats why we set it to 0 at start of chase 
         }
         void LookAtPlayer()// creates function named lookatplayer
