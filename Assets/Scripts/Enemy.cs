@@ -5,11 +5,13 @@ public class Enemy : MonoBehaviour
 {
     public Transform playerTransform; //Player Reference 
     public Transform[] patrolPoints; // These are the locations the AI will move to when the player is not within detection range the "[]" after transform makes it a list of Transforms or an "array"
-    private float detectionRange = 10f; //Radious around the enemy in which it can detect the player
+    public LayerMask sightLayers;
     public float waitTime = 2f;//the amount a time the enemy stays at each patrol point
     private float waitimer = 0;// second variable needed to make timer work/start
     private NavMeshAgent agent;// refrence for NavMeshAgent aka the actual brains of the AI 
     private int currentPatrolPoint = 0;// makes a variable for which patrol point the enemy is at
+    public PlayerDetection playerDetection;
+    bool inChase = false;
 
     private void Start()
     {
@@ -31,22 +33,60 @@ public class Enemy : MonoBehaviour
     }
     public void Update()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);//calculates distance from enemy to player in a vector 3 then it puts it into the float variable "distanceToPlayer"
+        
 
-        if (distanceToPlayer <= detectionRange)// if the distance to the player is less than or equal to the detection range of the enemy it will run the chasePlayer func.
+        if (inChase) //if player is currently in a chase do the following
         {
+            
             ChasePlayer();
         }
-        else //if it does not have player in its detection range it runs the Patrol func.
+
+        if (playerDetection.playerInRange)// this is true if the player is on the enemies detection area
         {
+            Vector3 direction = playerTransform.position - transform.position;// creates a variable the is the direction from enemy to player which we use later for the ray cast
+
+            float distance = direction.magnitude;// turns direction into a length so turn our vector into the distance inbetween the player and enemy
+
+            direction.Normalize();//removes the length from direction and makes its length 1, while keeping the same direction.
+
+            Debug.DrawRay(transform.position, direction * distance);// makes the raycast show up in unity so you can see it
+
+            if (Physics.Raycast(transform.position, direction, out RaycastHit hit, distance, sightLayers))//This is the raycast that effectively attaches the enemy to the player and once the enemy gets LOS is sets inchase to true
+            {
+                if (hit.transform.CompareTag("Player"))// asks if it hit the player
+                {
+                    inChase = true;// sets chase to true
+                }
+                else if (!inChase)
+                {
+                    Patrol();
+                }
+            }
+            else if (!inChase)
+            {
+                Patrol();
+            }
+
+        }
+        else //if player is not in detection range
+        {
+            inChase = false;
             Patrol();
         }
         void ChasePlayer()// makes a func named ChasePlayer that only runs when that previous "if" statement is met.
         {
+            Debug.Log("CHASE PLAYER RUNNING");
             agent.SetDestination(playerTransform.position);// just says to set the position of the ai to the player
+            LookAtPlayer();
             waitimer = 0;// we set the wait timer to this because lets say the enemy was at like 1.8 seconds into his wait timer when he started the chase, after the chase if we dont reset the timer he will only wait at his patrol point for 0.2 seconds thats why we set it to 0 at start of chase 
         }
-      
+        void LookAtPlayer()// creates function named lookatplayer
+        {
+            Vector3 direction = playerTransform.position - transform.position;// gets direction to player
+            direction.y = 0;//makes y 0 so enemy doesint look up to down
+            transform.rotation = Quaternion.LookRotation(direction);// makes enemy rotate to look at player
+        }
+
     }
     void GoToNextPatrolPoint()
     {
@@ -59,7 +99,7 @@ public class Enemy : MonoBehaviour
 
         if (currentPatrolPoint >= patrolPoints.Length)//all this is resetting the patrol points once you have gone past the lenth of the array 
         {
-            currentPatrolPoint = 0; 
+            currentPatrolPoint = 0; // rests back to first patrol point
         }
     }
 

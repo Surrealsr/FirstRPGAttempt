@@ -60,5 +60,20 @@ public class PlayerStats : MonoBehaviour
         currentStamina -= jumpDrain;
         staminaBar.setStamina(currentStamina);
     }
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+        }
+        Debug.Log("Player HP:" + currentHealth);
+    }
+    void Die()
+    {
+        Destroy(gameObject);
+    }
 
 }
