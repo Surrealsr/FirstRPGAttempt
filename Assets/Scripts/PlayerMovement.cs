@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public PlayerStats playerStats;
     
     public float playerSpeed = 8f;
-    public float playerGravity = -9.5f;
+    public float playerGravity = -9.8f;
     public float playerJumpStrength = 7f;
     public float playerSprintSpeed = 10f;
 
@@ -44,7 +44,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void Update()
     {
-       
+        fallSpeed += playerGravity * Time.deltaTime;
+        playerControl.Move(Vector3.up * fallSpeed * Time.deltaTime); //calculates the way the player falls(gravity)
+
+
         float currentPlayerSpeed = playerSpeed;//default speed is walking speed
 
         Vector2 moveInput = movePlayer.action.ReadValue<Vector2>();//saves the info of how the player is moving into moveInput
@@ -100,10 +103,7 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(cameraForward);//sets player rotation to rotation of cameraForward using Quaternion function
         }
 
-        fallSpeed += playerGravity * Time.deltaTime;
-        playerControl.Move(Vector3.up * fallSpeed * Time.deltaTime); //calculates the way the player falls(gravity)
-
-       
+              
     }
     
 

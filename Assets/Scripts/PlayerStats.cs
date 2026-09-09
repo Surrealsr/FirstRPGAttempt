@@ -6,7 +6,7 @@ public class PlayerStats : MonoBehaviour
    public int maxHealth = 100;
    public int currentHealth;
     
-    //stamina publics, floats and not ints because stamina drain works smoother with floats
+    //stamina publics, floats and not ints because stamina drain works smoother with floats(except for jumpdrain)
     public float maxStamina = 100;
     public float currentStamina;
     public float staminaDrain = 20f;
