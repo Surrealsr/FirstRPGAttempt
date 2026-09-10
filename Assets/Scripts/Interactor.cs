@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 interface Interactable
 {
@@ -14,6 +15,7 @@ public class Interactor : MonoBehaviour
     public Transform InteractorSource; //where the ray will come from(usually the camera)
     public float interactRange;//float to be modified for interact range of the raycast
     public InputActionReference interactKey;
+    public TMP_Text interactText;
 
     public void OnEnable()
     {
