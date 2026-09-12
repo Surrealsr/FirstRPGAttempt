@@ -12,6 +12,7 @@ public class RangedEnemyMovement : MonoBehaviour
     public RangedEnemy rangedEnemyScript;
     public PlayerDetection playerDetection;
     public Transform player;
+    
    
 
     private void Update()
@@ -59,7 +60,7 @@ public class RangedEnemyMovement : MonoBehaviour
     }
     public void Rush()
     {
-        agent.SetDestination(player.position);
+        agent.stoppingDistance = 0;
         rangedEnemyScript.rushingduration -= Time.deltaTime;
         rangedEnemyScript.rushing = true;
     }

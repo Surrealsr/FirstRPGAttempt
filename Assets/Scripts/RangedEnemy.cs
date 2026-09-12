@@ -1,5 +1,6 @@
 using Unity.AI.Assistant.Agents;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RangedEnemy : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class RangedEnemy : MonoBehaviour
     public float rushTimer = 6f;
     public float rushingduration = 5f;
     public bool rushing;
+    
 
     private void Update()
     {
@@ -39,6 +41,7 @@ public class RangedEnemy : MonoBehaviour
             }
             else if (sawPlayer)
             {
+                
                 rushTimer -= Time.deltaTime;
             }
         }
@@ -48,11 +51,13 @@ public class RangedEnemy : MonoBehaviour
         }
         if (rushTimer <= 0)
         {
+            
             patrolPoints.Rush();
         }
         if (rushingduration <= 0)
         {
             rushing = false;
+            patrolPoints.agent.stoppingDistance = 10;
             rushTimer = 6f;
             rushingduration = 5f;
         }
