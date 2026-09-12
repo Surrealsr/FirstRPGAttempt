@@ -13,6 +13,9 @@ public class RangedEnemy : MonoBehaviour
     public PlayerDetection playerDetection;
     public RangedEnemyMovement patrolPoints;
     public bool sawPlayer = false;
+    public float rushTimer = 6f;
+    public float rushingduration = 5f;
+    public bool rushing;
 
     private void Update()
     {
@@ -22,9 +25,9 @@ public class RangedEnemy : MonoBehaviour
         {
             fireTimer -= Time.deltaTime;
         }
-        if (distancetoplayer <= attackRange)// if player is when attackrange do the following
+        if (distancetoplayer <= attackRange)// if player is in attackrange do the following
         {
-            if (CanSeePlayer())// if the can see player bool is true
+            if (CanSeePlayer())// if the enemy can see the player, bool is true
             {
                 LookAtPlayer();// rotates enemy to look at the player
 
@@ -34,12 +37,27 @@ public class RangedEnemy : MonoBehaviour
                     fireTimer = fireCooldown;//begins attack cooldown
                 }
             }
+            else if (sawPlayer)
+            {
+                rushTimer -= Time.deltaTime;
+            }
         }
         if (!playerDetection.playerInRange)
         {
             sawPlayer = false;
         }
+        if (rushTimer <= 0)
+        {
+            patrolPoints.Rush();
+        }
+        if (rushingduration <= 0)
+        {
+            rushing = false;
+            rushTimer = 6f;
+            rushingduration = 5f;
+        }
     }
+   
     bool CanSeePlayer()// creates a bool named canseeplayer
     {
         
@@ -65,11 +83,11 @@ public class RangedEnemy : MonoBehaviour
     void LookAtPlayer()// creates function named lookatplayer
     {
         Vector3 direction = playerTarget.position - transform.position;// gets direction to player
-        direction.y = 0;//makes y 0 so enemy doesint look up to down
+        //direction.y = 0;//makes y 0 so enemy doesint look up to down
         transform.rotation = Quaternion.LookRotation(direction); // makes enemy rotate to look at player
     }
     void Shoot()// makes function called Shoot
     {
-        Instantiate(projectilePrefab, firepoint.position, firepoint.rotation);// spawns in a projectile first in the "()" is the prefab itself then the spawnpoint, then the last one is rotaion in this scenerio this is important because in the projectile prefab the projectile just travels forward so when spawned it needs to have correct orientation.
+        Instantiate(projectilePrefab, firepoint.position, firepoint.rotation);// spawns in a projectile first in the "()" is the prefab itself then the spawnpoint, then the last one is rotaion in this scenerio this is important because in the projectile prefab the projectile just travels forward so when spawned it needs to have correct orientation. 
     }
 }

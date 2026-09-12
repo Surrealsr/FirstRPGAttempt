@@ -11,6 +11,7 @@ public class RangedEnemyMovement : MonoBehaviour
     public Transform[] patrolPoints;
     public RangedEnemy rangedEnemyScript;
     public PlayerDetection playerDetection;
+    public Transform player;
    
 
     private void Update()
@@ -27,7 +28,6 @@ public class RangedEnemyMovement : MonoBehaviour
     }
     private void Start()
     {
-        
         GoToNextPatrolPoint();// begins the patrol sequence
     }
     public void Patrol()//what the enemy does when not chasing player 
@@ -56,5 +56,11 @@ public class RangedEnemyMovement : MonoBehaviour
         {
             currentPatrolPoint = 0; // resets back to first patrol point
         }
+    }
+    public void Rush()
+    {
+        agent.SetDestination(player.position);
+        rangedEnemyScript.rushingduration -= Time.deltaTime;
+        rangedEnemyScript.rushing = true;
     }
 }

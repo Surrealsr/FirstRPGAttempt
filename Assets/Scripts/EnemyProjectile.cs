@@ -5,11 +5,12 @@ public class EnemyProjectile : MonoBehaviour
     public float speed = 15f;// speed of projectile
     public float lifeTime = 5f;//how long the projectile is in the scene before deleting itself
     public int damage = 10; //how much dmg it does 
-    PlayerHealth playerhealth; //ref to player script to do the damage
+    public PlayerStats playerhealth; //ref to player script to do the damage
 
     private void Start()
     {
         Destroy(gameObject, lifeTime);// deletes the proj in 5 seconds according to our float
+        playerhealth = FindAnyObjectByType<PlayerStats>();
     }
 
     private void Update()
