@@ -1,3 +1,4 @@
+using Unity.AI.Assistant.Agents;
 using UnityEngine;
 
 public class RangedEnemy : MonoBehaviour
@@ -9,6 +10,9 @@ public class RangedEnemy : MonoBehaviour
     public float fireCooldown = 1f;// time inbetween attacks
     public LayerMask sightLayers;//what the raycast can see
     private float fireTimer;//what is used to start the attack cooldown
+    public PlayerDetection playerDetection;
+    public RangedEnemyMovement patrolPoints;
+    public bool sawPlayer = false;
 
     private void Update()
     {
@@ -31,25 +35,32 @@ public class RangedEnemy : MonoBehaviour
                 }
             }
         }
+        if (!playerDetection.playerInRange)
+        {
+            sawPlayer = false;
+        }
     }
     bool CanSeePlayer()// creates a bool named canseeplayer
     {
-        Vector3 direction = playerTarget.position - firepoint.position;//calculates direction to playertarget
+        
+            Vector3 direction = playerTarget.position - firepoint.position;//calculates direction to playertarget
 
-        float distance = direction.magnitude;// turns direction into a length so turn our vector into the distance inbetween the player and enemy
+            float distance = direction.magnitude;// turns direction into a length so turn our vector into the distance inbetween the player and enemy
 
-        direction.Normalize();//removes the length from direction and makes its length 1, while keeping the same direction.
+            direction.Normalize();//removes the length from direction and makes its length 1, while keeping the same direction.
 
-        Debug.DrawRay(firepoint.position,direction * distance);// makes the raycast show up in unity so you can see it
+            Debug.DrawRay(firepoint.position, direction * distance);// makes the raycast show up in unity so you can see it
 
-        if (Physics.Raycast(firepoint.position,direction, out RaycastHit hit, distance, sightLayers))//This is the raycast that effectively attaches the enemy to the player and once the enemy gets LOS
-        {
-            if (hit.transform.CompareTag("Player"))//if raycast hits the player without hitting anything else
+            if (Physics.Raycast(firepoint.position, direction, out RaycastHit hit, distance, sightLayers))//This is the raycast that effectively attaches the enemy to the player and once the enemy gets LOS
             {
-                return true;//makes bool true
+                if (hit.transform.CompareTag("Player"))//if raycast hits the player without hitting anything else
+                {
+                    sawPlayer = true;
+                    return true;//makes bool true
+                }
+         
             }
-        }
-        return false;//makes bool false if raycast does not hit player
+        return false;
     }
     void LookAtPlayer()// creates function named lookatplayer
     {
