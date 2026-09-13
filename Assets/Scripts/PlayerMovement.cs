@@ -9,7 +9,9 @@ public class PlayerMovement : MonoBehaviour
     public InputActionReference playerCamera;// Camera Look input
     public CharacterController playerControl; //Replacement for rigidbody on moving player, solves problem of movement issues with objects
     public PlayerStats playerStats;
-    
+    public Vector2 moveInput;
+    public Animator playerAnimator;
+
     public float playerSpeed = 8f;
     public float playerGravity = -9.8f;
     public float playerJumpStrength = 7f;
@@ -18,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
 
     float fallSpeed;
     float airSpeed;
+    bool isSprinting = false;
 
     Transform cameraTransform;
    
@@ -50,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
 
         float currentPlayerSpeed = playerSpeed;//default speed is walking speed
 
-        Vector2 moveInput = movePlayer.action.ReadValue<Vector2>();//saves the info of how the player is moving into moveInput
+        moveInput = movePlayer.action.ReadValue<Vector2>();//saves the info of how the player is moving into moveInput
         float x = moveInput.x;
         float z = moveInput.y; //so that player doesnt go flying when you press W
 
@@ -72,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
             {
                fallSpeed = playerJumpStrength;
                playerStats.staminaJumpDrain();
+                playerAnimator.SetTrigger("Jump");
             }
                 
 
@@ -81,11 +85,13 @@ public class PlayerMovement : MonoBehaviour
                 {
                     currentPlayerSpeed = playerSprintSpeed;// this will make default speed turn into sprinting speed
                     playerStats.drainStamina();
+                    isSprinting = true;
                 }
                             }
             else
             {
                 playerStats.regenStamina();
+                isSprinting = false;
             }
             airSpeed = currentPlayerSpeed;//calculates airSpeed to match current player speed
         }
@@ -103,7 +109,25 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(cameraForward);//sets player rotation to rotation of cameraForward using Quaternion function
         }
 
-              
+
+        if(moveInput == Vector2.zero)//If movement is equal to zero, then it will set Idle, if Sprint is held then set Sprint and stamina isnt depleted, otherwise just walk
+        {
+            playerAnimator.SetFloat("Speed", 0f);
+        }
+        else if (isSprinting == true && playerStats.staminaDepleted == false)
+        {
+          playerAnimator.SetFloat("Speed", 1f);
+                      
+        }
+        else
+        {
+            playerAnimator.SetFloat("Speed", 0.5f);
+        }
+
+        playerAnimator.SetBool("IsGrounded", playerControl.isGrounded);//WIP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        Debug.Log(playerControl.isGrounded);
+
+               
     }
     
 
