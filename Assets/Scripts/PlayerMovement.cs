@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,19 +12,23 @@ public class PlayerMovement : MonoBehaviour
     public PlayerStats playerStats;
     public Vector2 moveInput;
     public Animator playerAnimator;
+    public Transform playerCenterGrav;
 
     public float playerSpeed = 8f;
     public float playerGravity = -9.8f;
     public float playerJumpStrength = 7f;
     public float playerSprintSpeed = 10f;
+    public float playerGroundDetection = 1.2f;
 
 
     float fallSpeed;
     float airSpeed;
     bool isSprinting = false;
+    bool isGrounded = true;
+
 
     Transform cameraTransform;
-   
+
 
     private void OnEnable()
     {
@@ -41,8 +46,8 @@ public class PlayerMovement : MonoBehaviour
     }
     void Start()
     {
-      cameraTransform = Camera.main.transform;//solves problem of cameratransform dissapearing when you delete the object and replace with prefab
-                                                      //Basically makes cameraTransform equal to the tranform of the object with "MainCamera" Tag
+        cameraTransform = Camera.main.transform;//solves problem of cameratransform dissapearing when you delete the object and replace with prefab
+                                                //Basically makes cameraTransform equal to the tranform of the object with "MainCamera" Tag
     }
 
     public void Update()
@@ -57,10 +62,10 @@ public class PlayerMovement : MonoBehaviour
         float x = moveInput.x;
         float z = moveInput.y; //so that player doesnt go flying when you press W
 
-        
+
         Vector3 cameraForward = cameraTransform.forward; //cameraForward now stores the coords for where the camera is facing
         Vector3 cameraRight = cameraTransform.right; //cameraRight now stores coords for what direction is to the right of the camera
-        
+
         cameraForward.y = 0;//Player flying because camera look up no good
         cameraRight.y = 0;
 
@@ -69,15 +74,26 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 playerDirection = cameraForward * z + cameraRight * x;//playerDirection equals to the coords of where camera is facing and to the right of camera multiplied by x & z.
 
-        if (playerControl.isGrounded)
+        Ray groundDetect = new Ray(playerCenterGrav.position, Vector3.down);
+        if (Physics.Raycast(groundDetect, out RaycastHit groundHit, playerGroundDetection))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+
+
+        if (isGrounded == true)
         {
             if (playerJump.action.WasPressedThisFrame())//Checks if jump is pressed then downwards gravity(fallspeed) will turn into upwards force for a jump
             {
-               fallSpeed = playerJumpStrength;
-               playerStats.staminaJumpDrain();
+                fallSpeed = playerJumpStrength;
+                playerStats.staminaJumpDrain();
                 playerAnimator.SetTrigger("Jump");
             }
-                
+
 
             if (playerSprint.action.IsPressed())//Checks if Sprint is pressed then it'll check if Stamina is more than 0, then it'll Sprint and drain stamina, otherwise it starts regen
             {
@@ -87,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
                     playerStats.drainStamina();
                     isSprinting = true;
                 }
-                            }
+            }
             else
             {
                 playerStats.regenStamina();
@@ -110,25 +126,35 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if(moveInput == Vector2.zero)//If movement is equal to zero, then it will set Idle, if Sprint is held then set Sprint and stamina isnt depleted, otherwise just walk
+        if (moveInput == Vector2.zero)//If movement is equal to zero, then it will set Idle, if Sprint is held then set Sprint and stamina isnt depleted, otherwise just walk
         {
             playerAnimator.SetFloat("Speed", 0f);
         }
         else if (isSprinting == true && playerStats.staminaDepleted == false)
         {
-          playerAnimator.SetFloat("Speed", 1f);
-                      
+            playerAnimator.SetFloat("Speed", 1f);
+
         }
         else
         {
             playerAnimator.SetFloat("Speed", 0.5f);
         }
+        playerAnimator.SetBool("IsGrounded", isGrounded);
+       
 
-        playerAnimator.SetBool("IsGrounded", playerControl.isGrounded);//WIP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        Debug.Log(playerControl.isGrounded);
 
-               
+
     }
-    
+    private void OnDrawGizmos()
+    {
+        if (playerCenterGrav == null)
+        {
+            return;
+        }
+
+        Gizmos.DrawLine(
+            playerCenterGrav.position,
+            playerCenterGrav.position + Vector3.down * playerGroundDetection);
+    }
 
 }

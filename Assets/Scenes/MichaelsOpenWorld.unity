@@ -907,6 +907,14 @@ PrefabInstance:
       propertyPath: playerAnimator
       value: 
       objectReference: {fileID: 1901393432}
+    - target: {fileID: 5657373434122074943, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
+      propertyPath: playerCenterGrav
+      value: 
+      objectReference: {fileID: 1928122390}
+    - target: {fileID: 5657373434122074943, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
+      propertyPath: playerGroundDetection
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8272224720630274047, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.24675941
@@ -1287,6 +1295,11 @@ Mesh:
 --- !u!95 &1901393432 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8503293863994837340, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
+  m_PrefabInstance: {fileID: 1302717645}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1928122390 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 409008009568853618, guid: c8d7fa094a27ab7428863a81f4f8a050, type: 3}
   m_PrefabInstance: {fileID: 1302717645}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2141072010
