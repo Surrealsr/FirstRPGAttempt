@@ -12,6 +12,7 @@ public class PlayerStats : MonoBehaviour
     public float staminaDrain = 20f;
     public float staminaRegen = 15f;
     public int jumpDrain = 15;
+    public bool staminaDepleted = false;
 
      HealthBar healthBar;
      StaminaBar staminaBar;
@@ -35,7 +36,16 @@ public class PlayerStats : MonoBehaviour
 
         healthBar.setHealth(currentHealth);
 
-        if (currentStamina < 0) currentStamina = 0;//both these lines are just so Stamina can't get negative value from drain, and it can't go beyond max value because of regen.
+        if (currentStamina <= 0) //both these lines are just so Stamina can't get negative value from drain, and it can't go beyond max value because of regen.
+        {
+            currentStamina = 0;
+            staminaDepleted = true;
+        }
+        else
+        {
+            staminaDepleted = false;
+        }
+       
         if (currentStamina > 100) currentStamina = 100;
 
     }
