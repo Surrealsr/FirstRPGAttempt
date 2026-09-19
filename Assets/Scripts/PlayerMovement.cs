@@ -1,4 +1,5 @@
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,13 +13,17 @@ public class PlayerMovement : MonoBehaviour
     public PlayerStats playerStats;
     public Vector2 moveInput;
     public Animator playerAnimator;
-    public Transform playerCenterGrav;
+    public Transform playerFeetRadius;
+    public LayerMask groundLayer;
+    
+    
 
     public float playerSpeed = 8f;
     public float playerGravity = -9.8f;
     public float playerJumpStrength = 7f;
     public float playerSprintSpeed = 10f;
     public float playerGroundDetection = 1.2f;
+    
 
 
     float fallSpeed;
@@ -57,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         float currentPlayerSpeed = playerSpeed;//default speed is walking speed
-
+       
         moveInput = movePlayer.action.ReadValue<Vector2>();//saves the info of how the player is moving into moveInput
         float x = moveInput.x;
         float z = moveInput.y; //so that player doesnt go flying when you press W
@@ -74,8 +79,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 playerDirection = cameraForward * z + cameraRight * x;//playerDirection equals to the coords of where camera is facing and to the right of camera multiplied by x & z.
 
-        Ray groundDetect = new Ray(playerCenterGrav.position, Vector3.down);
-        if (Physics.Raycast(groundDetect, out RaycastHit groundHit, playerGroundDetection))
+        if(Physics.CheckSphere(playerFeetRadius.position, playerGroundDetection, groundLayer))
         {
             isGrounded = true;
         }
@@ -83,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
         }
-
+       
 
         if (isGrounded == true)
         {
@@ -111,11 +115,13 @@ public class PlayerMovement : MonoBehaviour
             }
             airSpeed = currentPlayerSpeed;//calculates airSpeed to match current player speed
         }
+
         else
         {
             currentPlayerSpeed = airSpeed;
+            
         }
-
+       
         playerControl.Move(playerDirection * currentPlayerSpeed * Time.deltaTime);//The player controller for the player is the value of playerDirection multiplied by the float of playerSpeed multiplied by the realtime of the program so it moves at normal rate without being tied to FPS.
 
         rotatePlayer(cameraForward);
@@ -147,14 +153,17 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        if (playerCenterGrav == null)
+        if (playerFeetRadius == null)
         {
             return;
         }
 
-        Gizmos.DrawLine(
-            playerCenterGrav.position,
-            playerCenterGrav.position + Vector3.down * playerGroundDetection);
+        Gizmos.DrawWireSphere(playerFeetRadius.position,playerGroundDetection);
+      
+            
+
+        
+            
     }
 
 }
